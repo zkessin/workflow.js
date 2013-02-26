@@ -22,24 +22,31 @@ UserView = Backbone.View.extend
             selector: "#user_info"
             tpl: _.template("<button class='logoutbtn'>Hello User</button>")
         }}
+    states:
+        "user": "show"
+        "guest": "hide"
     initialize: ->
         @model.bind('transition:to', () => @render())
+#        @model.bind('transition:from:guest', () -> @hide())
+#        @model.bind('transition:to:guest',   () -> @show())
     render: () ->
-        renderInfo = @templates[@model.get('workflow_state')]
-        template   = renderInfo.tpl
-        target     = renderInfo.selector 
-        $new = $(template(@model.toJSON()))
+        {
+            tpl: template,
+            selector: selector
+        } = @templates[@model.get('workflow_state')]
+        $new       = $(template(@model.toJSON()))
         @$el.remove()
-        $(target).html($new)
+        $(selector).html($new)
         @setElement($new)
         @
 
 
 
 $(() ->
-    user = new User()
+    user    = new User()
     userView = new UserView({model: user})
     userView.render()
+  
     $(".loginbtn").live("click", () ->
         user.triggerEvent("login"))
     $(".logoutbtn").live("click", () ->

@@ -46,6 +46,10 @@
         tpl: _.template("<button class='logoutbtn'>Hello User</button>")
       }
     },
+    states: {
+      "user": "show",
+      "guest": "hide"
+    },
     initialize: function() {
       var _this = this;
       return this.model.bind('transition:to', function() {
@@ -53,13 +57,11 @@
       });
     },
     render: function() {
-      var $new, renderInfo, target, template;
-      renderInfo = this.templates[this.model.get('workflow_state')];
-      template = renderInfo.tpl;
-      target = renderInfo.selector;
+      var $new, selector, template, _ref;
+      _ref = this.templates[this.model.get('workflow_state')], template = _ref.tpl, selector = _ref.selector;
       $new = $(template(this.model.toJSON()));
       this.$el.remove();
-      $(target).html($new);
+      $(selector).html($new);
       this.setElement($new);
       return this;
     }
