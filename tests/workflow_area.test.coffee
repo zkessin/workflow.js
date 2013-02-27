@@ -151,15 +151,54 @@ test("Change State View Injected Activate Event Test", () ->
  
 
 test("Change State Active Element", () ->
-    ok(false, "Test Not Yet Implemented")
+    views = makeViews(Backbone.View)
+    user = new User()
+    la   = new LoginArea({
+        model: user
+        views: views})
+    view = la.getViewByName('guest')
     
+    activeView1 = la.getActiveView()
+    ok(activeView1 instanceof Backbone.View, "Test that we have a view")
+    user.triggerEvent('login')
+    activeView2 = la.getActiveView()
+    ok(activeView2 instanceof Backbone.View, "Test that we have a view")
+    notEqual(activeView2, activeView1, "Test that the objects are not the same")
     )
 
 test("Change State element is active", () ->
-    ok(false, "Test Not Yet Implemented"))
+    views = makeViews(Backbone.View)
+    user = new User()
+    la   = new LoginArea({
+        model: user
+        views: views})
+    view = la.getViewByName('guest')
     
-test("Change State View Injected Deactivate Event Test", () ->
-    ok(false, "Test Not Yet Implemented"))
+    activeView1 = la.getActiveView()
+    ok(activeView1 instanceof Backbone.View, "Test that we have a view")
+
+    user.triggerEvent('login')
+    
+    activeView2 = la.getActiveView()
+    ok(activeView2 instanceof Backbone.View, "Test that we have a view")
+    notEqual(activeView2, activeView1, "Test that the objects are not the same")
+    ok(la.isViewActive(activeView2), "Test that the view is active")
+    ok(!la.isViewActive(activeView1), "Test that the view is not active")
+    )
+    
 
 test("Render Test", () ->
-    ok(false, "Test Not Yet Implemented"))
+    TestView = Backbone.View.extend({
+        render: () ->
+            ok(true)
+        })
+    expect(2)
+    views = makeViews(TestView)
+    user = new User()
+    la   = new LoginArea({
+        model: user
+        views: views})
+    activeView = la.getActiveView()
+    la.render()
+    user.triggerEvent('login')
+    )

@@ -22,6 +22,7 @@
       if ((_ref = this.views) == null) {
         this.views = {};
       }
+      this.state = this.model.get('workflow_state');
       return this.createViews();
     };
 
@@ -37,7 +38,9 @@
         return {
           state: state,
           component: component,
-          view: new _this.views[component](_this.model)
+          view: new _this.views[component]({
+            model: _this.model
+          })
         };
       }).map(function(component) {
         component.view.parent = _this;
@@ -46,17 +49,36 @@
     };
 
     WorkflowArea.prototype.changeState = function() {
-      var newState, newView;
+      var newState, newView, oldView, state;
+      state = this.state;
+      oldView = this.getViewByName(state);
       newState = this.model.get('workflow_state');
       this.trigger("state_change");
       this.trigger("state_change:" + (this.model.get('workflow_state')));
       newView = this.getViewByName(newState);
+      oldView.trigger("deactivate");
       newView.trigger("activate");
+      this.state = newState;
+      this.render();
       return false;
     };
 
     WorkflowArea.prototype.getActiveState = function() {
       return this.model.get('workflow_state');
+    };
+
+    WorkflowArea.prototype.getActiveView = function() {
+      var stateName;
+      stateName = this.getActiveState();
+      return this.getViewByName(stateName);
+    };
+
+    WorkflowArea.prototype.render = function() {
+      var activeView;
+      activeView = this.getActiveView();
+      activeView.render();
+      this.$el.html(activeView.$el);
+      return this;
     };
 
     WorkflowArea.prototype.getViewByName = function(name) {
@@ -66,8 +88,8 @@
       })) != null ? _ref.view : void 0;
     };
 
-    WorkflowArea.prototype.isViewActive = function() {
-      return false;
+    WorkflowArea.prototype.isViewActive = function(view) {
+      return view === this.getActiveView();
     };
 
     return WorkflowArea;

@@ -179,20 +179,75 @@
     return user.triggerEvent('login');
   });
 
+  test("Change State View Injected Activate Event Test", function() {
+    var la, user, view, views;
+    views = makeViews(Backbone.View);
+    user = new User();
+    la = new LoginArea({
+      model: user,
+      views: views
+    });
+    view = la.getViewByName('guest');
+    expect(1);
+    view.bind("deactivate", function() {
+      return ok(true, "Got the activate event");
+    });
+    return user.triggerEvent('login');
+  });
+
   test("Change State Active Element", function() {
-    return ok(false, "Test Not Yet Implemented");
+    var activeView1, activeView2, la, user, view, views;
+    views = makeViews(Backbone.View);
+    user = new User();
+    la = new LoginArea({
+      model: user,
+      views: views
+    });
+    view = la.getViewByName('guest');
+    activeView1 = la.getActiveView();
+    ok(activeView1 instanceof Backbone.View, "Test that we have a view");
+    user.triggerEvent('login');
+    activeView2 = la.getActiveView();
+    ok(activeView2 instanceof Backbone.View, "Test that we have a view");
+    return notEqual(activeView2, activeView1, "Test that the objects are not the same");
   });
 
   test("Change State element is active", function() {
-    return ok(false, "Test Not Yet Implemented");
-  });
-
-  test("Change State View Injected Deactivate Event Test", function() {
-    return ok(false, "Test Not Yet Implemented");
+    var activeView1, activeView2, la, user, view, views;
+    views = makeViews(Backbone.View);
+    user = new User();
+    la = new LoginArea({
+      model: user,
+      views: views
+    });
+    view = la.getViewByName('guest');
+    activeView1 = la.getActiveView();
+    ok(activeView1 instanceof Backbone.View, "Test that we have a view");
+    user.triggerEvent('login');
+    activeView2 = la.getActiveView();
+    ok(activeView2 instanceof Backbone.View, "Test that we have a view");
+    notEqual(activeView2, activeView1, "Test that the objects are not the same");
+    ok(la.isViewActive(activeView2), "Test that the view is active");
+    return ok(!la.isViewActive(activeView1), "Test that the view is not active");
   });
 
   test("Render Test", function() {
-    return ok(false, "Test Not Yet Implemented");
+    var TestView, activeView, la, user, views;
+    TestView = Backbone.View.extend({
+      render: function() {
+        return ok(true);
+      }
+    });
+    expect(2);
+    views = makeViews(TestView);
+    user = new User();
+    la = new LoginArea({
+      model: user,
+      views: views
+    });
+    activeView = la.getActiveView();
+    la.render();
+    return user.triggerEvent('login');
   });
 
 }).call(this);
