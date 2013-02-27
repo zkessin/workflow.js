@@ -11,6 +11,8 @@ class User extends Backbone.Model
   initialize: ->
     _.extend @, new Backbone.Workflow(@)
 
+
+    
 class LoginArea extends Backbone.WorkflowArea
     states:[
         {
@@ -50,4 +52,26 @@ test("Event Binding Test ", ->
     ) 
 
 
-        
+test("Create Views Test", ->
+    console.log("Create Views Test")
+    expect 1
+    twice = _.after(2, () ->
+        start()
+        ok(true, "Test that Initalize has been called twice")
+        )
+
+    TestView = Backbone.View.extend(
+        initialize: ->
+            twice()
+        )    
+    views = {
+        login:   TestView
+        logout:  TestView
+    }
+    user = new User()
+    stop()
+    la   = new LoginArea({
+        model: user
+        views: views})
+    
+    )

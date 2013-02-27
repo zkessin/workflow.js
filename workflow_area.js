@@ -15,8 +15,31 @@
       return this.model.on("transition:to", this.changeState, this);
     };
 
-    WorkflowArea.prototype.initialize = function() {
-      return this.setupStateTransitionEvent();
+    WorkflowArea.prototype.initialize = function(_arg) {
+      var _ref;
+      this.views = _arg.views;
+      this.setupStateTransitionEvent();
+      if ((_ref = this.views) == null) {
+        this.views = {};
+      }
+      return this.createViews();
+    };
+
+    WorkflowArea.prototype.createViews = function() {
+      var _this = this;
+      return this.states = _.chain(this.states).filter(function(_arg) {
+        var component;
+        component = _arg.component;
+        return _this.views[component] != null;
+      }).map(function(_arg) {
+        var component, state;
+        state = _arg.state, component = _arg.component;
+        return {
+          state: state,
+          component: component,
+          view: new _this.views[component](_this.model)
+        };
+      }).value();
     };
 
     WorkflowArea.prototype.changeState = function() {

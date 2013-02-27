@@ -89,4 +89,29 @@
     return equal("guest", la.getActiveState(), "Test that we have the correct state");
   });
 
+  test("Create Views Test", function() {
+    var TestView, la, twice, user, views;
+    console.log("Create Views Test");
+    expect(1);
+    twice = _.after(2, function() {
+      start();
+      return ok(true, "Test that Initalize has been called twice");
+    });
+    TestView = Backbone.View.extend({
+      initialize: function() {
+        return twice();
+      }
+    });
+    views = {
+      login: TestView,
+      logout: TestView
+    };
+    user = new User();
+    stop();
+    return la = new LoginArea({
+      model: user,
+      views: views
+    });
+  });
+
 }).call(this);
