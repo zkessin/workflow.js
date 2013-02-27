@@ -58,6 +58,7 @@ test("Event Binding Test ", ->
     ) 
 
 
+
 test("Create Views Test", ->
     expect 1
     twice = _.after(2, () ->
@@ -94,17 +95,55 @@ test("Change State Test", () ->
     
     )
 
-
-test("Change State Events", () ->
-    ok(false, "Test Not Yet Implemented"))
+test("getViewByNameTest", () ->
+    views = makeViews(Backbone.View)
+    user = new User()
     
-test("Change State Active Element", () ->
-    ok(false, "Test Not Yet Implemented"))
+    la   = new LoginArea({
+        model: user
+        views: views})
 
-test("Change State element is active", () ->
-    ok(false, "Test Not Yet Implemented"))
+    view = la.getViewByName('guest')
+
+    ok(_.isObject(view), "Test the view"))
+
+test("Get Parent from view", () ->
+    views = makeViews(Backbone.View)
+    user = new User()
+    
+    la   = new LoginArea({
+        model: user
+        views: views})
+
+    view = la.getViewByName('guest')
+    ok(_.isObject(view), "Test the view")
+    ok(_.isObject(view.parent), "Test that view.parent is defined")
+    deepEqual(view.parent, la, "Test taht view.parent is la"))
+
+    
+    
 
 test("Change State View Injected Activate Event Test", () ->
+    views = makeViews(Backbone.View)
+    user = new User()
+    la   = new LoginArea({
+        model: user
+        views: views})
+    view = la.getViewByName('user')
+    expect 1
+    view.bind("activate", () ->
+        ok(true, "Got the activate event"))
+  
+    user.triggerEvent('login'))
+
+ 
+
+test("Change State Active Element", () ->
+    ok(false, "Test Not Yet Implemented")
+    
+    )
+
+test("Change State element is active", () ->
     ok(false, "Test Not Yet Implemented"))
     
 test("Change State View Injected Deactivate Event Test", () ->

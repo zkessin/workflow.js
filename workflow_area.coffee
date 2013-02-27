@@ -16,12 +16,24 @@ class Backbone.WorkflowArea extends Backbone.View
                     state     : state
                     component : component
                     view      : new @views[component](@model)
-                }).value()
+                })
+            .map((component) =>
+                component.view.parent = @
+                component)
+            .value()
     changeState: () ->
+        newState = @model.get('workflow_state')
         @trigger("state_change")
         @trigger("state_change:#{@model.get('workflow_state')}")
+        newView = @getViewByName(newState)
+
+        newView.trigger("activate")
         false
+        
     getActiveState: () ->
         @model.get('workflow_state')
+    getViewByName: (name) ->
+        _.findWhere(@states,{state: name})?.view
+        
     isViewActive:() ->
         false

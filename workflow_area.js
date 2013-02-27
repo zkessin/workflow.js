@@ -39,17 +39,31 @@
           component: component,
           view: new _this.views[component](_this.model)
         };
+      }).map(function(component) {
+        component.view.parent = _this;
+        return component;
       }).value();
     };
 
     WorkflowArea.prototype.changeState = function() {
+      var newState, newView;
+      newState = this.model.get('workflow_state');
       this.trigger("state_change");
       this.trigger("state_change:" + (this.model.get('workflow_state')));
+      newView = this.getViewByName(newState);
+      newView.trigger("activate");
       return false;
     };
 
     WorkflowArea.prototype.getActiveState = function() {
       return this.model.get('workflow_state');
+    };
+
+    WorkflowArea.prototype.getViewByName = function(name) {
+      var _ref;
+      return (_ref = _.findWhere(this.states, {
+        state: name
+      })) != null ? _ref.view : void 0;
     };
 
     WorkflowArea.prototype.isViewActive = function() {

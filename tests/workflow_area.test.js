@@ -137,8 +137,46 @@
     return user.triggerEvent('login');
   });
 
-  test("Change State Events", function() {
-    return ok(false, "Test Not Yet Implemented");
+  test("getViewByNameTest", function() {
+    var la, user, view, views;
+    views = makeViews(Backbone.View);
+    user = new User();
+    la = new LoginArea({
+      model: user,
+      views: views
+    });
+    view = la.getViewByName('guest');
+    return ok(_.isObject(view), "Test the view");
+  });
+
+  test("Get Parent from view", function() {
+    var la, user, view, views;
+    views = makeViews(Backbone.View);
+    user = new User();
+    la = new LoginArea({
+      model: user,
+      views: views
+    });
+    view = la.getViewByName('guest');
+    ok(_.isObject(view), "Test the view");
+    ok(_.isObject(view.parent), "Test that view.parent is defined");
+    return deepEqual(view.parent, la, "Test taht view.parent is la");
+  });
+
+  test("Change State View Injected Activate Event Test", function() {
+    var la, user, view, views;
+    views = makeViews(Backbone.View);
+    user = new User();
+    la = new LoginArea({
+      model: user,
+      views: views
+    });
+    view = la.getViewByName('user');
+    expect(1);
+    view.bind("activate", function() {
+      return ok(true, "Got the activate event");
+    });
+    return user.triggerEvent('login');
   });
 
   test("Change State Active Element", function() {
@@ -146,10 +184,6 @@
   });
 
   test("Change State element is active", function() {
-    return ok(false, "Test Not Yet Implemented");
-  });
-
-  test("Change State View Injected Activate Event Test", function() {
     return ok(false, "Test Not Yet Implemented");
   });
 
