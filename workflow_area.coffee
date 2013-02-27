@@ -6,6 +6,7 @@ class Backbone.WorkflowArea extends Backbone.View
     initialize:  ({@views}) ->
         @setupStateTransitionEvent()
         @views ?= {}
+        @state = @model.get('workflow_state')
         @createViews()
     createViews: () ->
         @states =  _.chain(@states)
@@ -22,11 +23,13 @@ class Backbone.WorkflowArea extends Backbone.View
                 component)
             .value()
     changeState: () ->
+        state    = @state
+        oldView  = @getViewByName(state)
         newState = @model.get('workflow_state')
         @trigger("state_change")
         @trigger("state_change:#{@model.get('workflow_state')}")
         newView = @getViewByName(newState)
-
+        oldView.trigger("deactivate")
         newView.trigger("activate")
         false
         

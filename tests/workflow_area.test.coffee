@@ -135,7 +135,19 @@ test("Change State View Injected Activate Event Test", () ->
         ok(true, "Got the activate event"))
   
     user.triggerEvent('login'))
-
+    
+test("Change State View Injected Activate Event Test", () ->
+    views = makeViews(Backbone.View)
+    user = new User()
+    la   = new LoginArea({
+        model: user
+        views: views})
+    view = la.getViewByName('guest')
+    expect 1
+    view.bind("deactivate", () ->
+        ok(true, "Got the activate event"))
+  
+    user.triggerEvent('login'))
  
 
 test("Change State Active Element", () ->
