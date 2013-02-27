@@ -43,11 +43,17 @@
     };
 
     WorkflowArea.prototype.changeState = function() {
+      this.trigger("state_change");
+      this.trigger("state_change:" + (this.model.get('workflow_state')));
       return false;
     };
 
     WorkflowArea.prototype.getActiveState = function() {
       return this.model.get('workflow_state');
+    };
+
+    WorkflowArea.prototype.isViewActive = function() {
+      return false;
     };
 
     return WorkflowArea;

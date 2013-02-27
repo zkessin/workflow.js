@@ -18,6 +18,10 @@ class Backbone.WorkflowArea extends Backbone.View
                     view      : new @views[component](@model)
                 }).value()
     changeState: () ->
+        @trigger("state_change")
+        @trigger("state_change:#{@model.get('workflow_state')}")
         false
     getActiveState: () ->
         @model.get('workflow_state')
+    isViewActive:() ->
+        false

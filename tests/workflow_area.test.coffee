@@ -23,6 +23,12 @@ class LoginArea extends Backbone.WorkflowArea
             state: "user"
             component: "logout"
         }]
+
+makeViews = (Base) ->
+    views = {
+        login:   Base
+        logout:  Base
+        }
         
 #----------------------------------------------------------------------    
 module "Workflow Area",
@@ -53,7 +59,6 @@ test("Event Binding Test ", ->
 
 
 test("Create Views Test", ->
-    console.log("Create Views Test")
     expect 1
     twice = _.after(2, () ->
         start()
@@ -64,10 +69,7 @@ test("Create Views Test", ->
         initialize: ->
             twice()
         )    
-    views = {
-        login:   TestView
-        logout:  TestView
-    }
+    views = makeViews(TestView)
     user = new User()
     stop()
     la   = new LoginArea({
@@ -75,3 +77,38 @@ test("Create Views Test", ->
         views: views})
     
     )
+
+    
+test("Change State Test", () ->
+    views = makeViews(Backbone.View)
+    user = new User()
+    expect(2)
+    la   = new LoginArea({
+        model: user
+        views: views})
+    la.on('state_change',() =>
+        equal(la.model.get('workflow_state'), 'user', "Test that the state change method is called"))
+    la.on('state_change:user',() =>
+        equal(la.model.get('workflow_state'), 'user', "Test that the state change method is called"))
+    user.triggerEvent('login')
+    
+    )
+
+
+test("Change State Events", () ->
+    ok(false, "Test Not Yet Implemented"))
+    
+test("Change State Active Element", () ->
+    ok(false, "Test Not Yet Implemented"))
+
+test("Change State element is active", () ->
+    ok(false, "Test Not Yet Implemented"))
+
+test("Change State View Injected Activate Event Test", () ->
+    ok(false, "Test Not Yet Implemented"))
+    
+test("Change State View Injected Deactivate Event Test", () ->
+    ok(false, "Test Not Yet Implemented"))
+
+test("Render Test", () ->
+    ok(false, "Test Not Yet Implemented"))
